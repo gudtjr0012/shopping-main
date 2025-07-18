@@ -119,7 +119,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                       const SizedBox(width: 7),
                       const Text(
-                        '00.000원',
+                        '10.000원',
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.black26,
