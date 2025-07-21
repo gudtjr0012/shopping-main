@@ -36,4 +36,14 @@ Hell팀의 공동작업자 김형석, 김경현의 첫번째 프로젝트 입니
 ##  주요 폴더 구조 예시
 
 <pre> <strong>프로젝트 폴더 구조</strong> <code> 
-  lib/ ├── screens/ │ ├── home_screen.dart │ ├── product_list_page.dart │ ├── product_detail_screen.dart │ ├── cart_screen.dart │ ├── feed_screen.dart │ ├── my_screen.dart │ └── search_screen.dart ├── main.dart assets/ └── images/ ├── (피트 관련 이미지) ├── (상품 이미지) ├── (피드 이미지) ├── (배너 이미지) └── (로고 등 각종 이미지 리소스) </code> </pre>
+  lib/ ├── screens/ │ 
+         ├── home_screen.dart │ 
+         ├── product_list_page.dart │
+         ├── product_detail_screen.dart │
+         ├── cart_screen.dart │
+         ├── feed_screen.dart │
+         ├── my_screen.dart │
+         └── search_screen.dart
+        ├── main.dart 
+  assets/
+    └── images/ </code> </pre>
