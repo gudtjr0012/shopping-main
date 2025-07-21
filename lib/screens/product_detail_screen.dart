@@ -1,7 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:shopping/screens/cart_screen.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  const ProductDetailScreen({super.key});
+  final String productName;
+  final int price;
+  final String imagePath;
+  final Function(Map<String, dynamic>) addToCart;
+  final List<Map<String, dynamic>> cartItems;
+  final void Function(int) removeFromCart;
+  final void Function(int) incQty;
+  final void Function(int) decQty;
+  final int Function() getTotalPrice;
+  final void Function() orderAll;
+  final List<Map<String, dynamic>> orderHistory;
+  final VoidCallback onCartTap;
+  const ProductDetailScreen({
+    super.key,
+    required this.productName,
+    required this.price,
+    required this.imagePath,
+    required this.addToCart,
+    required this.cartItems,
+    required this.removeFromCart,
+    required this.incQty,
+    required this.decQty,
+    required this.getTotalPrice,
+    required this.orderAll,
+    required this.orderHistory,
+    required this.onCartTap,
+  });
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
@@ -9,6 +36,15 @@ class ProductDetailScreen extends StatefulWidget {
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   String selectedSize = "M";
   Color selectedColor = Colors.black;
+  String printingText = '';
+  final TextEditingController printingController = TextEditingController();
+
+  String get selectedColorName {
+    if (selectedColor == Colors.black) return "블랙";
+    if (selectedColor == Colors.red) return "레드";
+    if (selectedColor == Colors.blue) return "블루";
+    return "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +58,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           onPressed: () => Navigator.pop(context), // ← 여기!
         ),
         centerTitle: true,
-        title: const Text(
-          '상품명',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        title: Text(
+          widget.productName,
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -34,22 +73,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             // 상품 이미지
             Container(
               width: double.infinity,
-              height: 260,
+              height: 400,
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
               decoration: BoxDecoration(
                 color: Colors.grey[500],
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.black26, width: 1),
               ),
-              alignment: Alignment.center,
-              child: const Text(
-                '제품사진',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              clipBehavior: Clip.hardEdge,
+              child: Image.asset(widget.imagePath, fit: BoxFit.cover),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -61,9 +93,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     '브랜드명',
                     style: TextStyle(color: Colors.black38, fontSize: 13),
                   ),
-                  const Text(
-                    '제품명',
-                    style: TextStyle(
+                  Text(
+                    widget.productName,
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
@@ -108,9 +140,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   // 가격/할인
                   Row(
                     children: [
-                      const Text(
-                        '00.000원',
-                        style: TextStyle(
+                      Text(
+                        '${widget.price.toString().replaceAllMapped(RegExp(r'\B(?=(\d{3})+(?!\d))'), (match) => ',')}원',
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -214,6 +246,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       );
                     }).toList(),
                   ),
+                  const SizedBox(height: 18),
+                  Text(
+                    '프린팅 추가',
+                    style: TextStyle(fontSize: 15, color: Colors.black87),
+                  ),
+                  const SizedBox(height: 6),
+                  TextField(
+                    controller: printingController,
+                    onChanged: (val) => setState(() => printingText = val),
+                    decoration: InputDecoration(
+                      hintText: '원하는 문구 입력하세요 (최대 20자)',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
+                    ),
+                    maxLength: 20,
+                  ),
                   const SizedBox(height: 22),
                   // 제품 상세 설명
                   Container(
@@ -244,10 +296,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         ),
                         SizedBox(height: 10),
-                        Text('• □□□ - □□□', style: TextStyle(fontSize: 14)),
-                        Text('• □□□ - □□□', style: TextStyle(fontSize: 14)),
-                        Text('• □□□ - □□□', style: TextStyle(fontSize: 14)),
-                        Text('• □□□ - □□□', style: TextStyle(fontSize: 14)),
+                        Text(
+                          '• 프리미엄 코튼 100% 소재로 부드럽고 쾌적한 착용감',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Text(
+                          '• 여유로운 실루엣의 트렌디한 오버핏 디자인',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Text(
+                          '• 내구성 높은 이중 스티치 마감',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Text(
+                          '• 데일리룩, 캐주얼룩 모두 활용 가능한 베이직 아이템',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Text(
+                          '• 모델 착용 사이즈: L / 키 183cm, 70kg',
+                          style: TextStyle(fontSize: 14, color: Colors.black54),
+                        ),
                       ],
                     ),
                   ),
@@ -274,7 +342,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 onPressed: () {
-                  // print('선택 컬러: $selectedColor, 사이즈: $selectedSize');
+                  // 장바구니에 상품 추가
+                  widget.addToCart({
+                    'productName': widget.productName,
+                    'color': selectedColorName,
+                    'size': selectedSize,
+                    'price': widget.price,
+                    'imagePath': widget.imagePath,
+                    'printingText': printingText,
+                  });
+                  setState(() {}); // FAB 뱃지 즉시 반영
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('장바구니에 담았습니다!'),
+                      duration: Duration(milliseconds: 500),
+                    ),
+                  );
                 },
                 child: const Text(
                   '장바구니',
@@ -293,7 +376,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 onPressed: () {
-                  // print('선택 컬러: $selectedColor, 사이즈: $selectedSize');
+                  // 구매하기 버튼: 주문 완료 팝업만 띄움
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('주문 완료'),
+                      content: const Text('주문이 완료되었습니다!'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('확인'),
+                        ),
+                      ],
+                    ),
+                  );
                 },
                 child: const Text(
                   '구매하기',
@@ -303,6 +399,46 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: Stack(
+        alignment: Alignment.topRight,
+        children: [
+          FloatingActionButton(
+            backgroundColor: Colors.black,
+            onPressed: () {
+              Navigator.pop(context);
+              widget.onCartTap();
+            },
+            child: const Icon(Icons.shopping_cart, color: Colors.white),
+          ),
+          if (widget.cartItems.isNotEmpty)
+            Positioned(
+              right: 0,
+              top: 0,
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: Text(
+                  widget.cartItems
+                      .fold<int>(
+                        0,
+                        (sum, item) =>
+                            sum + ((item['qty'] ?? 1) as num).toInt(),
+                      )
+                      .toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
