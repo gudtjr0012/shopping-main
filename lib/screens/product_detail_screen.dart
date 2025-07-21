@@ -13,9 +13,10 @@ class ProductDetailScreen extends StatefulWidget {
   final int Function() getTotalPrice;
   final void Function() orderAll;
   final List<Map<String, dynamic>> orderHistory;
-  final VoidCallback onCartTap;
+
+  // onCartTap 제거 (이제 Navigator.push로 이동하니까 필요없음)
   const ProductDetailScreen({
-    super.key,
+    Key? key,
     required this.productName,
     required this.price,
     required this.imagePath,
@@ -27,8 +28,8 @@ class ProductDetailScreen extends StatefulWidget {
     required this.getTotalPrice,
     required this.orderAll,
     required this.orderHistory,
-    required this.onCartTap,
-  });
+  }) : super(key: key);
+
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
 }
@@ -55,7 +56,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         elevation: 1,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context), // ← 여기!
+          onPressed: () => Navigator.pop(context),
         ),
         centerTitle: true,
         title: Text(
@@ -406,8 +407,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           FloatingActionButton(
             backgroundColor: Colors.black,
             onPressed: () {
-              Navigator.pop(context);
-              widget.onCartTap();
+              // 장바구니 페이지를 "스택 쌓기"로 띄우기 (뒤로가기 동작 O)
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartScreen(
+                    cartItems: widget.cartItems,
+                    removeFromCart: widget.removeFromCart,
+                    incQty: widget.incQty,
+                    decQty: widget.decQty,
+                    getTotalPrice: widget.getTotalPrice,
+                    orderAll: widget.orderAll,
+                    orderHistory: widget.orderHistory,
+                    onBack: () {
+                      Navigator.of(context).pop(); // 장바구니 → 상세 복귀
+                    },
+                  ),
+                ),
+              );
             },
             child: const Icon(Icons.shopping_cart, color: Colors.white),
           ),

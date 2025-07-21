@@ -60,11 +60,12 @@ class _MainTabNavigatorState extends State<MainTabNavigator> {
   void addToCart(Map<String, dynamic> item) {
     setState(() {
       // 동일 상품(옵션까지 동일) 있으면 수량만 증가
-      final idx = cartItems.indexWhere((e) =>
-        e['productName'] == item['productName'] &&
-        e['color'] == item['color'] &&
-        e['size'] == item['size'] &&
-        e['price'] == item['price']
+      final idx = cartItems.indexWhere(
+        (e) =>
+            e['productName'] == item['productName'] &&
+            e['color'] == item['color'] &&
+            e['size'] == item['size'] &&
+            e['price'] == item['price'],
       );
       if (idx != -1) {
         cartItems[idx]['qty'] = (cartItems[idx]['qty'] ?? 1) + 1;
@@ -132,7 +133,7 @@ class _MainTabNavigatorState extends State<MainTabNavigator> {
         getTotalPrice: getTotalPrice,
         orderAll: orderAll,
         orderHistory: orderHistory,
-        onCartTap: () => setState(() { _currentIndex = 2; _selectedCategory = null; }),
+        // ★ onCartTap은 이제 넘기지 않습니다!
       );
     }
 
@@ -141,7 +142,7 @@ class _MainTabNavigatorState extends State<MainTabNavigator> {
         return HomeScreen(
           onCategoryTap: (category) =>
               setState(() => _selectedCategory = category),
-          onSearchTap: () => _onTabSelected(4), // 돋보기 클릭 시!
+          onSearchTap: () => _onTabSelected(4),
         );
       case 1:
         return FeedScreen(onBack: _onBackPressed);
@@ -159,7 +160,7 @@ class _MainTabNavigatorState extends State<MainTabNavigator> {
       case 3:
         return MyScreen(onBack: _onBackPressed);
       case 4:
-        return SearchScreen(onBack: _onBackPressed); // 검색화면도 뒤로가기 콜백
+        return SearchScreen(onBack: _onBackPressed);
       default:
         return const Center(child: Text("NOT FOUND"));
     }
