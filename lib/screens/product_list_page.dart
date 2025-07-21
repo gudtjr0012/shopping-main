@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:shopping/screens/product_detail_screen.dart';
-import 'package:shopping/screens/cart_screen.dart'; // Added import for CartScreen
+import 'package:shopping/screens/cart_screen.dart';
 
-// ★★★ 상품리스트 페이지 ★★★
 class ProductListPage extends StatefulWidget {
   final String initialFit;
   final VoidCallback? onBack;
@@ -15,9 +14,8 @@ class ProductListPage extends StatefulWidget {
   final int Function() getTotalPrice;
   final void Function() orderAll;
   final List<Map<String, dynamic>> orderHistory;
-  final VoidCallback onCartTap;
 
-  // *** 병합 후 모든 필수 파라미터 포함 ***
+  // onCartTap 파라미터는 제거!
   const ProductListPage({
     Key? key,
     required this.initialFit,
@@ -30,7 +28,6 @@ class ProductListPage extends StatefulWidget {
     required this.getTotalPrice,
     required this.orderAll,
     required this.orderHistory,
-    required this.onCartTap,
   }) : super(key: key);
 
   @override
@@ -129,14 +126,12 @@ class _ProductListPageState extends State<ProductListPage> {
                   crossAxisCount: 2,
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 20,
-                  childAspectRatio: 0.7,
+                  childAspectRatio: 0.65,
                 ),
                 itemBuilder: (context, idx) {
-                  // 상품 이름(예시) 생성
                   String productName =
                       '${fitTypes[selectedFitIndex]} 상품 ${idx + 1}';
                   int price = (idx + 1) * 10000;
-                  // 카테고리(핏)별 이미지 리스트 매핑
                   Map<String, List<String>> fitImageMap = {
                     '오버핏': List.generate(
                       5,
@@ -184,7 +179,6 @@ class _ProductListPageState extends State<ProductListPage> {
                             getTotalPrice: widget.getTotalPrice,
                             orderAll: widget.orderAll,
                             orderHistory: widget.orderHistory,
-                            onCartTap: widget.onCartTap,
                           ),
                         ),
                       );
@@ -196,13 +190,29 @@ class _ProductListPageState extends State<ProductListPage> {
           ),
         ],
       ),
+      // ===== FAB로 장바구니 진입 부분 (★수정) =====
       floatingActionButton: Stack(
         alignment: Alignment.topRight,
         children: [
           FloatingActionButton(
             backgroundColor: Colors.black,
             onPressed: () {
-              widget.onCartTap();
+              // ★ CartScreen을 push로 띄우고, onBack에서 pop!
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CartScreen(
+                    onBack: () => Navigator.pop(context), // ★뒤로가기는 pop!
+                    cartItems: widget.cartItems,
+                    removeFromCart: widget.removeFromCart,
+                    incQty: widget.incQty,
+                    decQty: widget.decQty,
+                    getTotalPrice: widget.getTotalPrice,
+                    orderAll: widget.orderAll,
+                    orderHistory: widget.orderHistory,
+                  ),
+                ),
+              );
             },
             child: const Icon(Icons.shopping_cart, color: Colors.white),
           ),
@@ -239,7 +249,7 @@ class _ProductListPageState extends State<ProductListPage> {
   }
 }
 
-// 상품카드
+// 상품카드 (동일)
 class ProductCard extends StatefulWidget {
   final double rating;
   final int reviewCount;
@@ -269,7 +279,6 @@ class _ProductCardState extends State<ProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    // 카드 전체 클릭 이벤트!
     return GestureDetector(
       onTap: widget.onTap,
       child: Card(
