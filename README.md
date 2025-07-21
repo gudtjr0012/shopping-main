@@ -47,3 +47,16 @@ Hell팀의 공동작업자 김형석, 김경현의 첫번째 프로젝트 입니
         ├── main.dart 
   assets/
     └── images/ </code> </pre>
+
+
+##  앱 구동 화면
+
+<img width="346" height="755" alt="스크린샷 2025-07-21 오후 6 06 39" src="https://github.com/user-attachments/assets/c5bd4bf5-08fb-403a-93f4-b7462e4a21c1" />  
+<img width="345" height="754" alt="스크린샷 2025-07-21 오후 6 06 58" src="https://github.com/user-attachments/assets/2e813af9-1662-4ed7-8906-12bd8c78618f" />
+<img width="344" height="753" alt="스크린샷 2025-07-21 오후 6 07 18" src="https://github.com/user-attachments/assets/5344f91d-b631-43ab-89c8-dec1c86d440d" />  
+<img width="344" height="758" alt="스크린샷 2025-07-21 오후 6 09 03" src="https://github.com/user-attachments/assets/3f0a6104-7290-4eb4-a1b8-fec15a52ad6f" />
+<img width="345" height="752" alt="스크린샷 2025-07-21 오후 6 07 54" src="https://github.com/user-attachments/assets/2123dc19-848a-4290-aa08-dfe16faa3ba9" />  
+<img width="345" height="752" alt="스크린샷 2025-07-21 오후 6 09 22" src="https://github.com/user-attachments/assets/284a942f-2f51-4e73-99d9-5edb1ea97fdb" />
+
+
+
