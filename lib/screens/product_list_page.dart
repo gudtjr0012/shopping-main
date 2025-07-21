@@ -14,8 +14,8 @@ class ProductListPage extends StatefulWidget {
   final int Function() getTotalPrice;
   final void Function() orderAll;
   final List<Map<String, dynamic>> orderHistory;
+  final void Function(BuildContext context) openCartScreen; // ★ 추가
 
-  // onCartTap 파라미터는 제거!
   const ProductListPage({
     Key? key,
     required this.initialFit,
@@ -28,6 +28,7 @@ class ProductListPage extends StatefulWidget {
     required this.getTotalPrice,
     required this.orderAll,
     required this.orderHistory,
+    required this.openCartScreen, // ★ 추가
   }) : super(key: key);
 
   @override
@@ -69,7 +70,7 @@ class _ProductListPageState extends State<ProductListPage> {
           },
         ),
         title: Text(
-          '${fitTypesEng[selectedFitIndex]}',
+          fitTypesEng[selectedFitIndex],
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -190,29 +191,13 @@ class _ProductListPageState extends State<ProductListPage> {
           ),
         ],
       ),
-      // ===== FAB로 장바구니 진입 부분 (★수정) =====
       floatingActionButton: Stack(
         alignment: Alignment.topRight,
         children: [
           FloatingActionButton(
             backgroundColor: Colors.black,
             onPressed: () {
-              // ★ CartScreen을 push로 띄우고, onBack에서 pop!
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartScreen(
-                    onBack: () => Navigator.pop(context), // ★뒤로가기는 pop!
-                    cartItems: widget.cartItems,
-                    removeFromCart: widget.removeFromCart,
-                    incQty: widget.incQty,
-                    decQty: widget.decQty,
-                    getTotalPrice: widget.getTotalPrice,
-                    orderAll: widget.orderAll,
-                    orderHistory: widget.orderHistory,
-                  ),
-                ),
-              );
+              widget.openCartScreen(context); // 항상 최신 props로!
             },
             child: const Icon(Icons.shopping_cart, color: Colors.white),
           ),

@@ -5,6 +5,7 @@ import 'screens/cart_screen.dart';
 import 'screens/my_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/product_list_page.dart';
+import 'screens/product_detail_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -28,7 +29,88 @@ class MainTabNavigator extends StatefulWidget {
 class _MainTabNavigatorState extends State<MainTabNavigator> {
   int _currentIndex = 0;
   String? _selectedCategory;
-  final List<int> _tabHistory = [0]; // 탭 이동 내역
+  final List<int> _tabHistory = [0];
+
+  List<Map<String, dynamic>> cartItems = [];
+  List<Map<String, dynamic>> orderHistory = [];
+
+  void addToCart(Map<String, dynamic> item) {
+    setState(() {
+      final idx = cartItems.indexWhere(
+        (e) =>
+            e['productName'] == item['productName'] &&
+            e['color'] == item['color'] &&
+            e['size'] == item['size'] &&
+            e['price'] == item['price'],
+      );
+      if (idx != -1) {
+        cartItems[idx]['qty'] = (cartItems[idx]['qty'] ?? 1) + 1;
+      } else {
+        cartItems.add({...item, 'qty': 1});
+      }
+    });
+  }
+
+  void removeFromCart(int index) {
+    setState(() {
+      cartItems.removeAt(index);
+    });
+  }
+
+  void incQty(int index) {
+    setState(() {
+      cartItems[index]['qty'] = (cartItems[index]['qty'] ?? 1) + 1;
+    });
+  }
+
+  void decQty(int index) {
+    setState(() {
+      if ((cartItems[index]['qty'] ?? 1) > 1) {
+        cartItems[index]['qty']--;
+      }
+    });
+  }
+
+  int getTotalPrice() {
+    int total = 0;
+    for (final item in cartItems) {
+      final price = (item['price'] as num).toInt();
+      final qty = ((item['qty'] ?? 1) as num).toInt();
+      total += price * qty;
+    }
+    return total;
+  }
+
+  void orderAll() {
+    setState(() {
+      if (cartItems.isNotEmpty) {
+        orderHistory.addAll(cartItems.map((e) => {...e}));
+        cartItems.clear();
+      }
+    });
+  }
+
+  // 🚩 장바구니 push (항상 최신 cartItems/콜백 사용!)
+  void openCartScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => CartScreen(
+          cartItems: cartItems,
+          removeFromCart: removeFromCart,
+          incQty: incQty,
+          decQty: decQty,
+          getTotalPrice: getTotalPrice,
+          orderAll: orderAll,
+          orderHistory: orderHistory,
+          onBack: () {
+            Navigator.of(context).pop();
+            setState(() {}); // 돌아왔을 때 리렌더!
+          },
+        ),
+      ),
+    ).then((_) => setState(() {}));
+  }
 
   void _onTabSelected(int index) {
     if (index != _currentIndex) {
@@ -50,76 +132,6 @@ class _MainTabNavigatorState extends State<MainTabNavigator> {
     }
   }
 
-  // 전역 장바구니 리스트
-  List<Map<String, dynamic>> cartItems = [];
-
-  // 주문내역 리스트
-  List<Map<String, dynamic>> orderHistory = [];
-
-  // 장바구니에 상품 추가 함수
-  void addToCart(Map<String, dynamic> item) {
-    setState(() {
-      // 동일 상품(옵션까지 동일) 있으면 수량만 증가
-      final idx = cartItems.indexWhere(
-        (e) =>
-            e['productName'] == item['productName'] &&
-            e['color'] == item['color'] &&
-            e['size'] == item['size'] &&
-            e['price'] == item['price'],
-      );
-      if (idx != -1) {
-        cartItems[idx]['qty'] = (cartItems[idx]['qty'] ?? 1) + 1;
-      } else {
-        cartItems.add({...item, 'qty': 1});
-      }
-    });
-  }
-
-  // 장바구니에서 상품 삭제 함수 (index 기준)
-  void removeFromCart(int index) {
-    setState(() {
-      cartItems.removeAt(index);
-    });
-  }
-
-  // 수량 증가
-  void incQty(int index) {
-    setState(() {
-      cartItems[index]['qty'] = (cartItems[index]['qty'] ?? 1) + 1;
-    });
-  }
-
-  // 수량 감소 (1 미만이면 삭제)
-  void decQty(int index) {
-    setState(() {
-      if ((cartItems[index]['qty'] ?? 1) > 1) {
-        cartItems[index]['qty']--;
-      }
-      // 1일 때는 아무 동작도 하지 않음
-    });
-  }
-
-  // 총합계 계산
-  int getTotalPrice() {
-    int total = 0;
-    for (final item in cartItems) {
-      final price = (item['price'] as num).toInt();
-      final qty = ((item['qty'] ?? 1) as num).toInt();
-      total += price * qty;
-    }
-    return total;
-  }
-
-  // 주문하기: 장바구니 상품을 주문내역으로 옮기고 장바구니 비우기
-  void orderAll() {
-    setState(() {
-      if (cartItems.isNotEmpty) {
-        orderHistory.addAll(cartItems.map((e) => {...e}));
-        cartItems.clear();
-      }
-    });
-  }
-
   Widget _getBody() {
     if (_selectedCategory != null) {
       return ProductListPage(
@@ -133,7 +145,7 @@ class _MainTabNavigatorState extends State<MainTabNavigator> {
         getTotalPrice: getTotalPrice,
         orderAll: orderAll,
         orderHistory: orderHistory,
-        // ★ onCartTap은 이제 넘기지 않습니다!
+        openCartScreen: openCartScreen, // 🟢 장바구니 열기
       );
     }
 
