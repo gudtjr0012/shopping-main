@@ -33,7 +33,10 @@ class FeedScreen extends StatelessWidget {
           onPressed: onBack, // ★ 이전탭 돌아가기 콜백!
         ),
         centerTitle: true,
-        title: const Text('Feed', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'Feed',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(

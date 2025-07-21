@@ -14,7 +14,6 @@ class ProductDetailScreen extends StatefulWidget {
   final void Function() orderAll;
   final List<Map<String, dynamic>> orderHistory;
 
-  // onCartTap 제거 (이제 Navigator.push로 이동하니까 필요없음)
   const ProductDetailScreen({
     Key? key,
     required this.productName,
@@ -169,7 +168,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
-
                   // 컬러 선택
                   const Text(
                     '컬러',
@@ -207,7 +205,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     }).toList(),
                   ),
                   const SizedBox(height: 18),
-
                   // 사이즈 선택
                   const Text(
                     '사이즈',
@@ -343,7 +340,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 onPressed: () {
-                  // 장바구니에 상품 추가
                   widget.addToCart({
                     'productName': widget.productName,
                     'color': selectedColorName,
@@ -377,7 +373,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 onPressed: () {
-                  // 구매하기 버튼: 주문 완료 팝업만 띄움
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -407,7 +402,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           FloatingActionButton(
             backgroundColor: Colors.black,
             onPressed: () {
-              // 장바구니 페이지를 "스택 쌓기"로 띄우기 (뒤로가기 동작 O)
+              // 최신 cartItems/콜백 props로 CartScreen을 push!
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -420,7 +415,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     orderAll: widget.orderAll,
                     orderHistory: widget.orderHistory,
                     onBack: () {
-                      Navigator.of(context).pop(); // 장바구니 → 상세 복귀
+                      Navigator.of(context).pop();
                     },
                   ),
                 ),
