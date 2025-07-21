@@ -1,41 +1,24 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: FeedScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
 class FeedScreen extends StatelessWidget {
-  const FeedScreen({super.key});
+  final VoidCallback? onBack; // ★ onBack 콜백 추가
+
+  const FeedScreen({super.key, this.onBack});
 
   // 블록 위젯 재사용
-  Widget _block({
-    double w = 140,
-    double h = 140,
-    String? assetPath, // ← 에셋 이미지 경로
-  }) => Container(
-    width: w,
-    height: h,
-    decoration: BoxDecoration(
-      color: Colors.black87,
-      borderRadius: BorderRadius.circular(32),
-    ),
-    clipBehavior: Clip.hardEdge, // 둥글게 자르기
-    child: assetPath != null
-        ? Image.asset(
-            assetPath,
-            fit: BoxFit.cover, // 꽉 채우기
-          )
-        : null, // assetPath가 없으면 빈 블록
-  );
+  Widget _block({double w = 140, double h = 140, String? assetPath}) =>
+      Container(
+        width: w,
+        height: h,
+        decoration: BoxDecoration(
+          color: Colors.black87,
+          borderRadius: BorderRadius.circular(32),
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: assetPath != null
+            ? Image.asset(assetPath, fit: BoxFit.cover)
+            : null,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +28,10 @@ class FeedScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 1,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: onBack, // ★ 이전탭 돌아가기 콜백!
+        ),
         centerTitle: true,
         title: const Text('Feed', style: TextStyle(color: Colors.black)),
       ),
@@ -119,6 +105,14 @@ class FeedScreen extends StatelessWidget {
                           h: 190,
                           assetPath: 'assets/images/feed7.jpg',
                         ),
+                        const SizedBox(height: 10),
+                        _block(
+                          w: 190,
+                          h: 210,
+                          assetPath: 'assets/images/feed10.jpg',
+
+                          /// 이미지 추가, 수정
+                        ),
                       ],
                     ),
                   ],
@@ -128,8 +122,6 @@ class FeedScreen extends StatelessWidget {
           ),
         ),
       ),
-
-      // 하단 네비게이션
     );
   }
 }

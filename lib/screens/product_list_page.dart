@@ -17,6 +17,7 @@ class ProductListPage extends StatefulWidget {
   final List<Map<String, dynamic>> orderHistory;
   final VoidCallback onCartTap;
 
+  // *** 병합 후 모든 필수 파라미터 포함 ***
   const ProductListPage({
     Key? key,
     required this.initialFit,
@@ -149,7 +150,6 @@ class _ProductListPageState extends State<ProductListPage> {
                       5,
                       (i) => 'assets/images/fit${i + 1}.jpg',
                     ),
-
                     '컴포트핏': List.generate(
                       5,
                       (i) => 'assets/images/fit${i + 1}.jpg',

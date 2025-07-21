@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-// main() 함수 및 MyApp 클래스는 예제이므로 삭제 또는 주석 처리
-
 class CartScreen extends StatelessWidget {
+  // === 모든 props 받아오기 (협업자+경현님) ===
+  final VoidCallback? onBack;
   final List<Map<String, dynamic>> cartItems;
   final void Function(int) removeFromCart;
   final void Function(int) incQty;
@@ -10,8 +10,10 @@ class CartScreen extends StatelessWidget {
   final int Function() getTotalPrice;
   final void Function() orderAll;
   final List<Map<String, dynamic>> orderHistory;
+
   const CartScreen({
     Key? key,
+    this.onBack, // onBack은 null 가능(호환 위해)
     required this.cartItems,
     required this.removeFromCart,
     required this.incQty,
@@ -21,7 +23,7 @@ class CartScreen extends StatelessWidget {
     required this.orderHistory,
   }) : super(key: key);
 
-  // 재사용 가능한 장바구니 상품 아이템 위젯
+  // ===== 재사용 가능한 장바구니 상품 아이템 위젯 =====
   Widget _cartItem(Map<String, dynamic> item, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -69,7 +71,11 @@ class CartScreen extends StatelessWidget {
                 const SizedBox(height: 18),
                 Row(
                   children: [
-                    _qtyButton(icon: Icons.add, onPressed: () => incQty(index)),
+                    // 수량 감소 버튼 (0보다 작아지지 않게)
+                    _qtyButton(
+                      icon: Icons.remove,
+                      onPressed: () => decQty(index),
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       (item['qty'] ?? 1).toString().padLeft(2, '0'),
@@ -79,9 +85,10 @@ class CartScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
+                    // 수량 증가 버튼
                     _qtyButton(
-                      icon: Icons.remove,
-                      onPressed: () => decQty(index),
+                      icon: Icons.add,
+                      onPressed: () => incQty(index),
                     ),
                   ],
                 ),
@@ -101,7 +108,7 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  // 수량 버튼 위젯 (재사용)
+  // ===== 수량 버튼 위젯 (재사용) =====
   static Widget _qtyButton({
     required IconData icon,
     required VoidCallback onPressed,
@@ -123,7 +130,7 @@ class CartScreen extends StatelessWidget {
     );
   }
 
-  // 주문내역 팝업 위젯
+  // ===== 주문내역 팝업 위젯 =====
   void showOrderHistory(BuildContext context) {
     showDialog(
       context: context,
@@ -172,7 +179,10 @@ class CartScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 1,
         centerTitle: true,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: onBack, // onBack이 null이어도 안전하게 동작
+        ),
         title: const Text('Cart', style: TextStyle(color: Colors.black)),
       ),
       // 장바구니 리스트 & 총합계
