@@ -1,16 +1,47 @@
-# shopping
+- 패션 쇼핑몰 앱 Hellfit -
+Hell조 공동작업자 김형석, 김경현의 첫번째 프로젝트
+패션 쇼핑몰 서비스를 Flutter로 구현했습니다.
+상품 리스트, 상세, 장바구니, 회원정보, 검색 등 실제 커머스에서 필요한 전 기능을 커스텀 컴포넌트와 상태관리 없이 오로지 위젯 트리 구조로 구현했습니다.
 
-A new Flutter project.
+1. 주요 기능 요약
+기능명	설명
+| 기능명        | 설명                                                                 |
+| **홈/카테고리** | 카테고리별 상품 리스트 진입 가능, 각 카테고리별 상품 탐색                       |
+| **상품 리스트** | 카테고리/핏 별 상품 목록, FAB(장바구니) 알림 뱃지 표시                        |
+| **상품 상세**  | 컬러/사이즈/프린팅 옵션 선택, 장바구니 담기 및 즉시 구매, 하단 장바구니 바로가기      |
+| **장바구니**   | 담은 상품 목록, 수량 조절 및 삭제, 전체 주문, 주문내역 팝업                     |
+| **My페이지**  | 신체정보/체형/사이즈 입력, AI 맞춤 핏 추천(기본 로직)                          |
+| **피드(추천)** | 그리드 이미지 피드(브랜드/룩북 스타일 참고용)                                 |
+| **검색**      | 상단 입력창을 통한 상품명, 브랜드명 검색 (입력 필드 포함)                        |
+| **네비게이션**  | 앱 하단 BottomNavigationBar를 통한 페이지 전환 및 탭 기록 기반 "이전탭" 뒤로가기 |
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+2. 협업 및 설계 특징
+Props & Callback 기반 컴포넌트 구조
+단일 상태관리 없이 각 Screen에 필요한 콜백(예: onBack, addToCart 등)과 데이터를 명확히 전달
 
-A few resources to get you started if this is your first Flutter project:
+FAB 통한 바로가기 & 이전페이지 유지
+상품상세, 상품리스트, 장바구니 화면 모두 FAB/뒤로가기 버튼 동작을 수동 제어 →
+장바구니 진입 이후 뒤로가기시 원래 상세/리스트로 자연스럽게 이동
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+깃 브랜치 협업/병합 및 충돌 관리
+실제 개발환경처럼 동업자와 브랜치 활용 및 병합, 코드 충돌 해결
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. 주요 폴더 구조 예시
+
+lib/
+ ㄴ screens/
+   ㄴ home_screen.dart
+   ㄴ product_list_page.dart
+   ㄴ product_detail_screen.dart
+   ㄴ cart_screen.dart
+   ㄴ feed_screen.dart
+   ㄴ my_screen.dart
+   ㄴ search_screen.dart
+ ㄴ main.dart
+assets/
+ ㄴ images/
+      (피트, 상품, 피드, 배너, 로고 등 각종 이미지 리소스)
+
+
+4. 후기 - 처음부터 끝까지 직접 설계, 협업, 구조화하며 Flutter UI/UX/상태 전달의 모든 패턴을 실전처럼 연습할 수 있는 최고의 경험이었습니다!
