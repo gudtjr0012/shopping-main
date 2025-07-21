@@ -1,34 +1,21 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: MyScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
 class MyScreen extends StatefulWidget {
-  const MyScreen({super.key});
+  final VoidCallback? onBack; // ★ 추가!
+
+  const MyScreen({super.key, this.onBack});
+
   @override
   State<MyScreen> createState() => _MyScreenState();
 }
 
 class _MyScreenState extends State<MyScreen> {
-  // 입력값 컨트롤러
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
   final TextEditingController topSizeController = TextEditingController();
   final TextEditingController bottomSizeController = TextEditingController();
 
-  // 성별(남: true, 여: false)
   bool? isMale;
-  // 체형(0~3 중 하나)
   int? selectedBodyType;
 
   @override
@@ -53,7 +40,10 @@ class _MyScreenState extends State<MyScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 1,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: widget.onBack, // ★ onBack 콜백 호출
+        ),
         centerTitle: true,
         title: const Text(
           'My',
@@ -215,7 +205,6 @@ class _MyScreenState extends State<MyScreen> {
                         Expanded(
                           child: TextField(
                             controller: topSizeController,
-                            // 영문, 숫자 모두 가능하게!
                             decoration: InputDecoration(
                               isDense: true,
                               hintText: '상의',
@@ -231,7 +220,6 @@ class _MyScreenState extends State<MyScreen> {
                         Expanded(
                           child: TextField(
                             controller: bottomSizeController,
-                            // 영문, 숫자 모두 가능하게!
                             decoration: InputDecoration(
                               isDense: true,
                               hintText: '하의',

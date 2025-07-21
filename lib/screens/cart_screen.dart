@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: CartScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
 class CartScreen extends StatelessWidget {
-  const CartScreen({super.key});
+  final VoidCallback? onBack; // ★ 추가!
+
+  const CartScreen({super.key, this.onBack});
 
   // 재사용 가능한 장바구니 상품 아이템 위젯
   Widget _cartItem() {
@@ -55,7 +44,7 @@ class CartScreen extends StatelessWidget {
                 const SizedBox(height: 18),
                 Row(
                   children: [
-                    _qtyButton(icon: Icons.add, onPressed: () {}),
+                    _qtyButton(icon: Icons.remove, onPressed: () {}),
                     const SizedBox(width: 8),
                     const Text(
                       '01',
@@ -65,7 +54,9 @@ class CartScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    _qtyButton(icon: Icons.remove, onPressed: () {}),
+                    _qtyButton(icon: Icons.add, onPressed: () {}),
+
+                    /// 수량 조절 버튼 위치 바꿈
                   ],
                 ),
               ],
@@ -115,7 +106,10 @@ class CartScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 1,
         centerTitle: true,
-        leading: const Icon(Icons.arrow_back, color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: onBack, // ★ 이전탭 돌아가기 콜백!
+        ),
         title: const Text('Cart', style: TextStyle(color: Colors.black)),
       ),
       // 장바구니 리스트 & 총합계

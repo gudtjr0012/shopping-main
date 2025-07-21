@@ -7,8 +7,7 @@ class ProductListPage extends StatefulWidget {
   final String initialFit;
   final VoidCallback? onBack;
 
-  const ProductListPage({Key? key, required this.initialFit, this.onBack})
-    : super(key: key);
+  const ProductListPage({super.key, required this.initialFit, this.onBack});
 
   @override
   State<ProductListPage> createState() => _ProductListPageState();

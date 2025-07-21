@@ -1,20 +1,9 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: SearchScreen(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
 class SearchScreen extends StatelessWidget {
-  const SearchScreen({super.key});
+  final VoidCallback? onBack; // ★ onBack 콜백!
+
+  const SearchScreen({super.key, this.onBack});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +11,11 @@ class SearchScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          // 상단 검색 박스 (앱바 아님! 직접 만듦)
+          // 상단 검색 박스
           Container(
-            margin: const EdgeInsets.only(top: 18),
+            margin: const EdgeInsets.only(top: 30),
+
+            /// 상단 여백 공간 수정
             padding: const EdgeInsets.symmetric(horizontal: 8),
             height: 54,
             decoration: BoxDecoration(
@@ -40,7 +31,7 @@ class SearchScreen extends StatelessWidget {
                     color: Colors.black,
                     size: 26,
                   ),
-                  onPressed: () {},
+                  onPressed: onBack, // ★ 콜백으로 이전탭 이동!
                   splashRadius: 22,
                 ),
                 const Spacer(),
@@ -53,7 +44,7 @@ class SearchScreen extends StatelessWidget {
             ),
           ),
           // 본문 (중앙 안내문구)
-          Expanded(
+          const Expanded(
             child: Center(
               child: Text(
                 '브랜드, 상품명을 검색해보세요',
